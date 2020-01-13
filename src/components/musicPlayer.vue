@@ -2,7 +2,7 @@
 	<v-card max-width="400" class="mx-auto">
 		<v-list-item two-line>
 			<v-list-item-content>
-				<v-list-item-title class="headline">随身听</v-list-item-title>
+				<v-list-item-title @click="getSearchResult()" class="headline">随身听</v-list-item-title>
 				<v-list-item-subtitle>beat</v-list-item-subtitle>
 			</v-list-item-content>
 		</v-list-item>
@@ -33,5 +33,16 @@
 				}
 			],
 		}),
+		methods:{
+			getSearchResult(){
+				//Keyword=Keyword||"周杰伦"
+				// this.$http.get(`/api/api/v3/search/song?format=json&keyword=${Keyword}&page=1&pagesize=&showtype=1`).then(d=>{
+				// 	alert(d)
+				// })
+				this.axios.get("/kugouApi/song_search_v2?callback=jQuery112406779001086802137_1578900789640&keyword=%E5%91%A8%E6%9D%B0%E4%BC%A6&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1578900789648").then(d=>{
+					alert(d)
+				})
+			}
+		}
 	}
 </script>
