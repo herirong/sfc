@@ -12,6 +12,14 @@ module.exports = {
 				pathRewrite: {
 					"^/kugouApi": "/"
 				}
+			},
+			'/wwwapi/*': {
+				target: 'https://wwwapi.kugou.com',
+				ws: true,
+				changeOrigin: true,
+				pathRewrite: {
+					"^/wwwapi": "/"
+				}
 			}
 		}
 	}
