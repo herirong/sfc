@@ -4,9 +4,9 @@ module.exports = {
 	],
 	publicPath: process.env.NODE_ENV === 'production'
 	    ? '/sfc/'
-	    : '/'
+	    : '/',
 	devServer: {
-		disableHostCheck:true,
+		disableHostCheck: true,
 		proxy: {
 			'/kugouApi/*': {
 				target: 'https://songsearch.kugou.com',
