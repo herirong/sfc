@@ -7,9 +7,10 @@ import './assets/css/materialIcons.css'
 
 
 Vue.config.productionTip = false
+Vue.prototype.globalData={}
 
 new Vue({
-  vuetify,
+  vuetify,	
   render: h => h(App),
   axios
 }).$mount('#app')

@@ -34,6 +34,10 @@
     export default {
         name: 'vuetify-audio',
         props: {
+			audioIndex: {
+				type: Number,
+				default: 0
+			},
             fileList: {
                 type: Array,
                 default: null
@@ -60,7 +64,6 @@
             return {
 				file:"",
                 firstPlay: true,
-				currentFileIndex:0,
                 isMuted: false,
                 loaded: false,
                 playing: false,
@@ -71,7 +74,11 @@
                 totalDuration: 0,
             }
         },
-
+		watch: {
+			audioIndex(n) {
+				this.$emit('getAudioIndex', n)
+			}
+		},
         methods: {
             setPosition () {
                 this.audio.currentTime = parseInt(this.audio.duration / 100 * this.percentage);
@@ -83,29 +90,27 @@
             },
             play () {
                 if (this.playing) return
-				this.file=this.fileList.length>0?this.fileList[this.currentFileIndex]:""
+				this.file=this.fileList.length>0?this.fileList[this.audioIndex]:""
                 this.paused = false
                 this.audio.play().then(() => this.playing = true)
             },
 			next(){
-				if(this.currentFileIndex == this.fileList.length-1) // this is the end of the songs.
-					this.currentFileIndex = 0;
+				if(this.audioIndex == this.fileList.length-1) // this is the end of the songs.
+					this.audioIndex = 0;
 				else
-					this.currentFileIndex++
-				let nextSong = this.fileList[this.currentFileIndex];
-				this.audio.src = nextSong;
-				this.audio.load();
-				this.audio.play();
+					this.audioIndex++
+				this.file = this.fileList[this.audioIndex]||"";
+				this.paused = false
+				this.audio.load()
 			},
 			pre(){
-				if(this.currentFileIndex == 0) // this is the end of the songs.
-					this.currentFileIndex = this.fileList.length-1;
+				if(this.audioIndex == 0) // this is the end of the songs.
+					this.audioIndex = this.fileList.length-1;
 				else
-					this.currentFileIndex--
-				let nextSong = this.fileList[this.currentFileIndex];
-				this.audio.src = nextSong;
+					this.audioIndex--
+				this.file = this.fileList[this.audioIndex]||"";
+				this.paused = false
 				this.audio.load();
-				this.audio.play();
 			},
             pause () {
                 this.paused = !this.paused;
@@ -124,6 +129,7 @@
                 this.audio.load();
             },
             _handleLoaded: function () {
+				this.globalData.audioIndex=this.audioIndex
                 if (this.audio.readyState >= 2) {
                     if (this.audio.duration === Infinity) {
                         // Fix duration for streamed audio source or blob based
@@ -140,7 +146,7 @@
                         this.loaded = true
                     }
 
-                    if (this.autoPlay) this.audio.play()
+                    if (this.autoPlay) this.audio.play().then(() => this.playing = true,() => alert("文件格式不支持！"))
 
                 } else {
                     throw new Error('Failed to load sound file')
@@ -151,6 +157,8 @@
                 this.currentTime = formatTime(this.audio.currentTime)
             },
             _handlePlayPause: function (e) {
+				console.log("playing in "+this.file)
+				console.log("playListCount:"+this.fileList.length)
                 if (e.type === 'play' && this.firstPlay) {
                     // in some situations, audio.currentTime is the end one on chrome
                     this.audio.currentTime = 0;
@@ -164,18 +172,18 @@
             },
             _handleEnded () {
                 this.paused = this.playing = false;
-				this.currentFileIndex++;
-				let nextSong = this.fileList[this.currentFileIndex];
+				this.audioIndex++;
+				let nextSong = this.fileList[this.audioIndex];
 				this.audio.src = nextSong;
 				this.audio.load();
 				this.audio.play();
-				if(this.currentFileIndex == this.fileList.length-1) // this is the end of the songs.
+				if(this.audioIndex == this.fileList.length-1) // this is the end of the songs.
 				{
-					this.currentFileIndex = 0;
+					this.audioIndex = 0;
 				}
             },
             init: function () {
-				this.file=this.fileList[this.currentFileIndex]
+				this.file=this.fileList[this.audioIndex]
                 this.audio.addEventListener('timeupdate', this._handlePlayingUI);
                 this.audio.addEventListener('loadeddata', this._handleLoaded);
                 this.audio.addEventListener('pause', this._handlePlayPause);
