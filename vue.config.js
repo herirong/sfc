@@ -2,10 +2,10 @@ module.exports = {
 	"transpileDependencies": [
 		"vuetify"
 	],
-	publicPath: process.env.NODE_ENV === 'production'
-	    ? '/sfc/'
-	    : '/',
+	publicPath:'./',
 	devServer: {
+		host: '0.0.0.0',
+		port:"9001",
 		disableHostCheck: true,
 		proxy: {
 			'/kugouApi/*': {

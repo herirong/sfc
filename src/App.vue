@@ -51,7 +51,7 @@
 	
 		<v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="cyan" dark flat>
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-			<v-toolbar-title>sst</v-toolbar-title>
+			<v-toolbar-title>随身听</v-toolbar-title>
 			
 			<v-spacer></v-spacer>
 			

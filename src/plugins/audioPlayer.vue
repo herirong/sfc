@@ -25,7 +25,7 @@
             <v-progress-linear v-model="percentage" height="5" style="margin-top: 15px; margin-bottom: 15px;" @click.native="setPosition()" color="teal" :disabled="!loaded"></v-progress-linear>
             <p>{{ currentTime }} / {{ duration }}</p>
         </v-card-text>
-        <audio id="player" ref="player" v-on:ended="ended" v-on:canplay="canPlay" :src="file"></audio>
+        <audio id="player" ref="player" v-on:ended="ended" v-on:canplay="canPlay" :src="file.play_url"></audio>
     </v-card>
 </template>
 <script>
@@ -38,7 +38,7 @@
 				type: Number,
 				default: 0
 			},
-            fileList: {
+            audioInfoList: {
                 type: Array,
                 default: null
             },
@@ -77,6 +77,7 @@
 		watch: {
 			audioIndex(n) {
 				this.$emit('getAudioIndex', n)
+				this.file=this.audioInfoList[n]
 			}
 		},
         methods: {
@@ -90,25 +91,25 @@
             },
             play () {
                 if (this.playing) return
-				this.file=this.fileList.length>0?this.fileList[this.audioIndex]:""
+				this.file=this.audioInfoList.length>0?this.audioInfoList[this.audioIndex]:""
                 this.paused = false
                 this.audio.play().then(() => this.playing = true)
             },
 			next(){
-				if(this.audioIndex == this.fileList.length-1) // this is the end of the songs.
+				if(this.audioIndex == this.audioInfoList.length-1) // this is the end of the songs.
 					this.audioIndex = 0;
 				else
 					this.audioIndex++
-				this.file = this.fileList[this.audioIndex]||"";
+				this.file = this.audioInfoList[this.audioIndex]||"";
 				this.paused = false
 				this.audio.load()
 			},
 			pre(){
 				if(this.audioIndex == 0) // this is the end of the songs.
-					this.audioIndex = this.fileList.length-1;
+					this.audioIndex = this.audioInfoList.length-1;
 				else
 					this.audioIndex--
-				this.file = this.fileList[this.audioIndex]||"";
+				this.file = this.audioInfoList[this.audioIndex]||"";
 				this.paused = false
 				this.audio.load();
 			},
@@ -129,7 +130,6 @@
                 this.audio.load();
             },
             _handleLoaded: function () {
-				this.globalData.audioIndex=this.audioIndex
                 if (this.audio.readyState >= 2) {
                     if (this.audio.duration === Infinity) {
                         // Fix duration for streamed audio source or blob based
@@ -146,7 +146,7 @@
                         this.loaded = true
                     }
 
-                    if (this.autoPlay) this.audio.play().then(() => this.playing = true,() => alert("文件格式不支持！"))
+                    if (this.autoPlay) this.audio.play().then(() => this.playing = true)
 
                 } else {
                     throw new Error('Failed to load sound file')
@@ -158,7 +158,7 @@
             },
             _handlePlayPause: function (e) {
 				console.log("playing in "+this.file)
-				console.log("playListCount:"+this.fileList.length)
+				console.log("playListCount:"+this.audioInfoList.length)
                 if (e.type === 'play' && this.firstPlay) {
                     // in some situations, audio.currentTime is the end one on chrome
                     this.audio.currentTime = 0;
@@ -173,17 +173,17 @@
             _handleEnded () {
                 this.paused = this.playing = false;
 				this.audioIndex++;
-				let nextSong = this.fileList[this.audioIndex];
+				let nextSong = this.audioInfoList[this.audioIndex];
 				this.audio.src = nextSong;
 				this.audio.load();
 				this.audio.play();
-				if(this.audioIndex == this.fileList.length-1) // this is the end of the songs.
+				if(this.audioIndex == this.audioInfoList.length-1) // this is the end of the songs.
 				{
 					this.audioIndex = 0;
 				}
             },
             init: function () {
-				this.file=this.fileList[this.audioIndex]
+				this.file=this.audioInfoList[this.audioIndex]
                 this.audio.addEventListener('timeupdate', this._handlePlayingUI);
                 this.audio.addEventListener('loadeddata', this._handleLoaded);
                 this.audio.addEventListener('pause', this._handlePlayPause);

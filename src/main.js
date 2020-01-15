@@ -7,7 +7,7 @@ import './assets/css/materialIcons.css'
 
 
 Vue.config.productionTip = false
-Vue.prototype.globalData={}
+
 
 new Vue({
   vuetify,	
