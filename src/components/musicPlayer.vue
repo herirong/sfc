@@ -46,6 +46,13 @@
 			</v-tab-item>
 			<v-tab-item>
 				<v-card flat>
+					<v-card-text v-html="audioInfo.lyrics">
+						
+					</v-card-text>
+				</v-card>
+			</v-tab-item>
+			<v-tab-item>
+				<v-card flat>
 					<!-- <v-row class="mx-2">
 						<v-text-field v-model="searchValue" flat single-line prepend-inner-icon="mdi-magnify" label="Search" class="" />
 						<v-btn color="primary" text @click="getSearchResult()">搜索</v-btn>
@@ -58,7 +65,7 @@
 									<v-img :src="audioInfo.avatar"></v-img>
 								</v-list-item-avatar> -->
 								<v-list-item-content>
-									<v-list-item-title v-html="item.song_name+' —— '+item.author_name"></v-list-item-title>
+									<v-list-item-title v-html="i+'.'+item.song_name+' —— '+item.author_name"></v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
 						</v-list-item-group>
@@ -111,6 +118,7 @@
 
 <script>
 	import audioPlayer from '../plugins/audioPlayer';
+	import songs from '../assets/songs.js';
 	export default {
 		props: {
 			source: String,
@@ -124,11 +132,11 @@
 		data: () => ({
 			currentTab: null,
 			tabInfo: [
-				'播放', '发现'
+				'播放','歌词','发现'
 			],
 			audioIndex: -1,
 			audioInfo: {},
-			audioInfoList: [],
+			audioInfoList: songs,
 			searchValue: "",
 			dialog: false,
 			drawer: null,
@@ -140,6 +148,9 @@
 		watch: {
 			audioIndex(n) {
 				this.audioInfo = this.audioInfoList[n]
+				this.audioInfo.lyrics=this.audioInfo.lyrics.replace(/\r\n/g,"<br/>")
+				this.audioInfo.play_url=`http://sfc.server2012.herirong.ltd/songs/${this.audioInfo.song_name}.mp3`
+				console.log(this.audioInfo)
 			}
 		},
 		methods: {
@@ -147,13 +158,11 @@
 				this.audioIndex = d
 			},
 			getSearchResult() {
-				if(!window["songs"]){
-					alert("no songs")
-				}
 				let self = this
-				self.audioInfoList=window["songs"]
-				//self.audioInfoList=JSON.parse('[{"hash":"5fce4cbcb96d6025033bce2025fc3943","timelength":215000,"filesize":3443771,"audio_name":"周杰伦 - 告白气球","have_album":1,"album_name":"周杰伦的床边故事","album_id":"1645030","img":"http://imge.kugou.com/stdmusic/20160623/20160623233610830051.jpg","have_mv":1,"video_id":"589001","author_name":"周杰伦","song_name":"告白气球","author_id":"3520","privilege":10,"privilege2":"1010","play_url":"https://webfs.yun.kugou.com/202001151323/f6ea7927a9830f328c3dcf63ace0e603/part/0/960129/G063/M03/06/11/34YBAFdskzmAUMlOADSMOxgm3l4714.mp3","authors":[{"author_id":"3520","is_publish":"1","sizable_avatar":"http://singerimg.kugou.com/uploadpic/softhead/{size}/20180515/20180515002522714.jpg","author_name":"周杰伦","avatar":"http://singerimg.kugou.com/uploadpic/softhead/400/20180515/20180515002522714.jpg"}],"is_free_part":1,"bitrate":128,"audio_id":"22084042","play_backup_url":"https://webfs.cloud.kugou.com/202001151323/0ab3047619c934833ffff0e8d7a82ee7/part/0/960129/G063/M03/06/11/34YBAFdskzmAUMlOADSMOxgm3l4714.mp3","trans_param":{"cid":5678206,"pay_block_tpl":1,"musicpack_advance":1,"display_rate":0,"hash_offset":{"offset_hash":"A635FEFCF2F1831CA1F53A9508A9777C","start_byte":0,"start_ms":0,"file_type":0,"end_ms":60000,"end_byte":960129},"display":0}}]')
 				self.audioIndex=0
+				
+				self.audioInfoList=self.audioInfoList.filter(info=>{ return (info.index<=20)})
+				console.log(self.audioInfoList)
 				// console.log(this.fileList)
 				// let self = this
 				// Keyword = Keyword || self.searchValue || "周杰伦"
