@@ -2,7 +2,7 @@
 	<v-card>
 		<v-toolbar color="cyan" dark flat>
 			<template v-slot:extension>
-				<v-tabs v-model="currentTab" align-with-title background-color="transparent">
+				<v-tabs fixed-tabs="true" v-model="currentTab" align-with-title background-color="transparent">
 					<v-tabs-slider color="yellow"></v-tabs-slider>
 
 					<v-tab v-for="item in tabInfo" :key="item">

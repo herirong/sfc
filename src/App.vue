@@ -35,7 +35,7 @@
 							</v-list-item-content>
 						</v-list-item>
 					</v-list-group>
-					<v-list-item @click="menuEvent(item.url)"  v-else :key="item.text" link>
+					<v-list-item @click="menuEvent(item.url)" v-else :key="item.text" link>
 						<v-list-item-action>
 							<v-icon>{{ item.icon }}</v-icon>
 						</v-list-item-action>
@@ -48,13 +48,13 @@
 				</template>
 			</v-list>
 		</v-navigation-drawer>
-	
+
 		<v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="cyan" dark flat>
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 			<v-toolbar-title>随身听</v-toolbar-title>
-			
+
 			<v-spacer></v-spacer>
-			
+
 			<v-btn icon>
 				<v-icon>mdi-magnify</v-icon>
 			</v-btn>
@@ -83,49 +83,25 @@
 		</v-app-bar>
 		<musicPlayerPage v-if="currentPage=='musicPlayerPage'"></musicPlayerPage>
 		<faceapiPage v-if="currentPage=='faceapiPage'"></faceapiPage>
-		<v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog">
-			<v-icon>mdi-plus</v-icon>
-		</v-btn>
-		<v-dialog v-model="dialog" width="800px">
-			<v-card>
-				<v-card-title class="grey darken-2">
-					Create contact
-				</v-card-title>
-				<v-container>
-					<v-row class="mx-2">
-						<v-col class="align-center justify-space-between" cols="12">
-							<v-row align="center" class="mr-0">
-								<v-avatar size="40px" class="mx-3">
-									<img src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png" alt="">
-								</v-avatar>
-								<v-text-field placeholder="Name" />
-							</v-row>
-						</v-col>
-						<v-col cols="6">
-							<v-text-field prepend-icon="business" placeholder="Company" />
-						</v-col>
-						<v-col cols="6">
-							<v-text-field placeholder="Job title" />
-						</v-col>
-						<v-col cols="12">
-							<v-text-field prepend-icon="mail" placeholder="Email" />
-						</v-col>
-						<v-col cols="12">
-							<v-text-field type="tel" prepend-icon="phone" placeholder="(000) 000 - 0000" />
-						</v-col>
-						<v-col cols="12">
-							<v-text-field prepend-icon="notes" placeholder="Notes" />
-						</v-col>
-					</v-row>
-				</v-container>
-				<v-card-actions>
-					<v-btn text color="primary">More</v-btn>
-					<v-spacer />
-					<v-btn text color="primary" @click="dialog = false">Cancel</v-btn>
-					<v-btn text @click="dialog = false">Save</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
+
+		<v-speed-dial v-model="fab" :top="top" :bottom="bottom" :right="right" :left="left" :direction="direction"
+		:open-on-hover="hover" :transition="transition">
+			<template v-slot:activator>
+				<v-btn v-model="fab" color="blue darken-2" dark fab>
+					<v-icon v-if="fab">mdi-close</v-icon>
+					<v-icon v-else>mdi-account-circle</v-icon>
+				</v-btn>
+			</template>
+			<v-btn fab dark small color="green">
+				<v-icon>mdi-pencil</v-icon>
+			</v-btn>
+			<v-btn fab dark small color="indigo">
+				<v-icon>mdi-plus</v-icon>
+			</v-btn>
+			<v-btn fab dark small color="red">
+				<v-icon>mdi-delete</v-icon>
+			</v-btn>
+		</v-speed-dial>
 	</v-app>
 </template>
 
@@ -141,26 +117,49 @@
 			faceapiPage
 		},
 		data: () => ({
-			currentPage:"musicPlayerPage",
+			direction: 'top',
+			fab: false,
+			fling: false,
+			hover: false,
+			tabs: null,
+			top: false,
+			right: true,
+			bottom: true,
+			left: false,
+			transition: 'slide-y-reverse-transition',
+
+
+			currentPage: "musicPlayerPage",
 			dialog: false,
 			drawer: null,
 			items: [{
-				url:"musicPlayerPage",
+					url: "musicPlayerPage",
 					icon: 'mdi-contacts',
 					text: '音乐'
 				},
 				{
-					url:"faceapiPage",
-						icon: 'mdi-contacts',
-						text: '人脸识别'
-					}
+					url: "faceapiPage",
+					icon: 'mdi-contacts',
+					text: '人脸识别'
+				}
 			],
 		}),
-		methods:{
-			menuEvent(d){
-				this.currentPage=d
+		methods: {
+			menuEvent(d) {
+				this.currentPage = d
 				this.drawer = !this.drawer
 			}
 		}
 	}
 </script>
+
+<style>
+	/* This is for documentation purposes and will not be needed in your application */
+	#inspire .v-speed-dial {
+		position: absolute;
+	}
+
+	#inspire .v-btn--floating {
+		position: relative;
+	}
+</style>
