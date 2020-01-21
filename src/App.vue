@@ -156,7 +156,7 @@
 <style>
 	/* This is for documentation purposes and will not be needed in your application */
 	#inspire .v-speed-dial {
-		position: absolute;
+		position: fixed;
 	}
 
 	#inspire .v-btn--floating {
