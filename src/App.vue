@@ -48,66 +48,17 @@
 				</template>
 			</v-list>
 		</v-navigation-drawer>
-
-		<v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="cyan" dark flat>
-			<v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-			<v-toolbar-title>随身听</v-toolbar-title>
-
-			<v-spacer></v-spacer>
-
-			<v-btn icon>
-				<v-icon>mdi-magnify</v-icon>
-			</v-btn>
-			<v-btn icon>
-				<v-icon>mdi-bell</v-icon>
-			</v-btn>
-			<v-btn icon>
-				<v-icon>mdi-dots-vertical</v-icon>
-			</v-btn>
-			<!-- <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-				<span class="hidden-sm-and-down">Google Contacts</span>
-			</v-toolbar-title> -->
-			<!-- <v-text-field flat solo-inverted hide-details prepend-inner-icon="mdi-magnify" label="Search" class="hidden-sm-and-down" />
-			<v-spacer />
-			<v-btn icon>
-				<v-icon>mdi-apps</v-icon>
-			</v-btn>
-			<v-btn icon>
-				<v-icon>mdi-bell</v-icon>
-			</v-btn>
-			<v-btn icon large>
-				<v-avatar size="32px" item>
-					<v-img src="https://cdn.vuetifyjs.com/images/logos/logo.svg" alt="Vuetify" />
-				</v-avatar>
-			</v-btn> -->
-		</v-app-bar>
 		<musicPlayerPage v-if="currentPage=='musicPlayerPage'"></musicPlayerPage>
 		<faceapiPage v-if="currentPage=='faceapiPage'"></faceapiPage>
 
-		<v-speed-dial v-model="fab" :top="top" :bottom="bottom" :right="right" :left="left" :direction="direction"
-		:open-on-hover="hover" :transition="transition">
-			<template v-slot:activator>
-				<v-btn v-model="fab" color="blue darken-2" dark fab>
-					<v-icon v-if="fab">mdi-close</v-icon>
-					<v-icon v-else>mdi-account-circle</v-icon>
-				</v-btn>
-			</template>
-			<v-btn fab dark small color="green">
-				<v-icon>mdi-pencil</v-icon>
-			</v-btn>
-			<v-btn fab dark small color="indigo">
-				<v-icon>mdi-plus</v-icon>
-			</v-btn>
-			<v-btn fab dark small color="red">
-				<v-icon>mdi-delete</v-icon>
-			</v-btn>
-		</v-speed-dial>
+		
 	</v-app>
 </template>
 
 <script>
 	import musicPlayerPage from './components/musicPlayer'
 	import faceapiPage from './components/faceapiPage'
+	import { mapState } from 'vuex'
 	export default {
 		props: {
 			source: String,
@@ -116,22 +67,11 @@
 			musicPlayerPage,
 			faceapiPage
 		},
-		data: () => ({
-			direction: 'top',
-			fab: false,
-			fling: false,
-			hover: false,
-			tabs: null,
-			top: false,
-			right: true,
-			bottom: true,
-			left: false,
-			transition: 'slide-y-reverse-transition',
-
-
+		computed:mapState({
+			drawer: state => state.toolBarMenuState
+		}),
+		data:() => ({
 			currentPage: "musicPlayerPage",
-			dialog: false,
-			drawer: null,
 			items: [{
 					url: "musicPlayerPage",
 					icon: 'mdi-contacts',
@@ -147,19 +87,9 @@
 		methods: {
 			menuEvent(d) {
 				this.currentPage = d
-				this.drawer = !this.drawer
 			}
 		}
 	}
 </script>
 
-<style>
-	/* This is for documentation purposes and will not be needed in your application */
-	#inspire .v-speed-dial {
-		position: fixed;
-	}
 
-	#inspire .v-btn--floating {
-		position: relative;
-	}
-</style>
