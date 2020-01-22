@@ -1,5 +1,37 @@
 <template>
-	<v-container>
+	<v-card>
+		<v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-3" dark>
+			<v-app-bar-nav-icon @click.stop="switchMenuState()" />
+			<v-toolbar-title>随身听</v-toolbar-title>
+		
+			<v-spacer></v-spacer>
+		
+			<v-btn icon @click="onbuild()">
+				<v-icon>mdi-magnify</v-icon>
+			</v-btn>
+			<v-btn icon @click="onbuild()">
+				<v-icon>mdi-bell</v-icon>
+			</v-btn>
+			<v-btn icon @click="onbuild()">
+				<v-icon>mdi-dots-vertical</v-icon>
+			</v-btn>
+		</v-app-bar>
+		<v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-3" dark>
+			<v-app-bar-nav-icon @click.stop="switchMenuState()" />
+			<v-toolbar-title>随身听</v-toolbar-title>
+					
+			<v-spacer></v-spacer>
+					
+			<v-btn icon @click="onbuild()">
+				<v-icon>mdi-magnify</v-icon>
+			</v-btn>
+			<v-btn icon @click="onbuild()">
+				<v-icon>mdi-bell</v-icon>
+			</v-btn>
+			<v-btn icon @click="onbuild()">
+				<v-icon>mdi-dots-vertical</v-icon>
+			</v-btn>
+		</v-toolbar>
 		<v-layout text-center wrap>
 			<v-flex xs12>
 				<v-img :src="require('../assets/logo.svg')" class="my-3" contain height="200"></v-img>
@@ -9,20 +41,19 @@
 				<h1 class="display-2 font-weight-bold mb-3">
 					马不停蹄开发中。。。。
 				</h1>
-				<p class="subheading font-weight-regular">
-					For help and collaboration with other Vuetify developers,
-					<br>please join our online
-					<a href="https://community.vuetifyjs.com" target="_blank">Discord Community</a>
-				</p>
 			</v-flex>
 		</v-layout>
-	</v-container>
+	</v-card>
 </template>
 
 <script>
 	export default {
 		name: 'HelloWorld',
-
+		methods:{
+			switchMenuState(){
+				this.$store.state.toolBarMenuState=!this.$store.state.toolBarMenuState
+			},
+		},
 		data: () => ({
 			ecosystem: [{
 					text: 'vuetify-loader',

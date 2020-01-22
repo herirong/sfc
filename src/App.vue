@@ -1,6 +1,6 @@
 <template>
 	<v-app id="inspire">
-		<v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
+		<v-navigation-drawer v-model="$store.state.toolBarMenuState" :clipped="$vuetify.breakpoint.lgAndUp" app>
 			<v-list dense>
 				<template v-for="item in items">
 					<v-row v-if="item.heading" :key="item.heading" align="center">
@@ -48,9 +48,9 @@
 				</template>
 			</v-list>
 		</v-navigation-drawer>
-		<musicPlayerPage v-if="currentPage=='musicPlayerPage'"></musicPlayerPage>
+		<musicPlayerPage v-show="currentPage=='musicPlayerPage'"></musicPlayerPage>
 		<faceapiPage v-if="currentPage=='faceapiPage'"></faceapiPage>
-
+		
 		
 	</v-app>
 </template>
@@ -58,7 +58,6 @@
 <script>
 	import musicPlayerPage from './components/musicPlayer'
 	import faceapiPage from './components/faceapiPage'
-	import { mapState } from 'vuex'
 	export default {
 		props: {
 			source: String,
@@ -67,19 +66,16 @@
 			musicPlayerPage,
 			faceapiPage
 		},
-		computed:mapState({
-			drawer: state => state.toolBarMenuState
-		}),
 		data:() => ({
 			currentPage: "musicPlayerPage",
 			items: [{
 					url: "musicPlayerPage",
-					icon: 'mdi-contacts',
+					icon: 'mdi-music',
 					text: '音乐'
 				},
 				{
 					url: "faceapiPage",
-					icon: 'mdi-contacts',
+					icon: 'mdi-alien',
 					text: '人脸识别'
 				}
 			],
@@ -87,6 +83,7 @@
 		methods: {
 			menuEvent(d) {
 				this.currentPage = d
+				this.$store.state.toolBarMenuState=!this.$store.state.toolBarMenuState
 			}
 		}
 	}

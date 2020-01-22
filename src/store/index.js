@@ -3,9 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const state = {
-	toolBarMenuState:false
-}
 export default new Vuex.Store({
-	state
+	state : {
+		toolBarMenuState:false
+	}
 })
